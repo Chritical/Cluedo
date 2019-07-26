@@ -1,0 +1,112 @@
+class Game
+{
+  * -- * Turn;
+  * -- * Item;
+}
+
+class Board
+{
+  1 -- 1 Game;
+    * -- * Item;
+  * -- * Character;
+  * -- * Room;
+}
+
+class Item
+{
+  }
+
+class Envelope
+{
+  * -- * Game;
+}
+
+class Character
+{
+    isA Item;
+* -- * Player;
+  }
+
+class Turn
+{
+}
+
+class Die
+{
+}
+
+class Player
+{
+  * -- * Turn;
+}
+
+class Weapon
+{
+  isA Item;
+}
+
+class Room
+{
+  isA Item;
+}
+
+//$?[End_of_model]$?
+
+class Game
+{
+  position 183 58 109 41;
+  position.association Game__Turn 9,41 72,0;
+  position.association Game__Item 109,23 73,8;
+}
+
+class Board
+{
+  position 267 149 109 41;
+  position.association Board__Game 67,0 63,41;
+    position.association Board__Item 70,41 6,0;
+  position.association Board__Character 8,46 87,0;
+  position.association Board__Room 77,41 53,15;
+}
+
+class Item
+{
+  position 453 255 109 41;
+  }
+
+class Envelope
+{
+  position 1 101 109 41;
+  position.association Envelope__Game 105,0 0,29;
+}
+
+class Character
+{
+  position 259 380 109 41;
+  position.association Character__Player 0,41 109,0;
+  }
+
+class Turn
+{
+  position 101 169 109 41;
+}
+
+class Die
+{
+  position 453 102 109 41;
+}
+
+class Player
+{
+  position 96 258 109 41;
+  position.association Player__Turn 73,0 57,41;
+}
+
+class Weapon
+{
+  position 393 385 109 41;
+}
+
+class Room
+{
+  position 524 381 109 41;
+}
