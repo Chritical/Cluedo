@@ -1,0 +1,33 @@
+Concepts
+  Location (free, unaccessible)
+  Board ()
+
+  Character (location; can move)
+  Weapon (location; can move between rooms)
+  Room (location)
+  Card (represents an item; held by players; in envelope)
+  Selection (player selects card to show)
+  Murder circumstances (three cards in envelope: room, weapon, character)
+  Player (has cards in hand; moves character on turn; rolls dice; accuses; refutes; suggests; wins/loses)
+  Envelope (contains murder circumstances; hidden)
+  Stack (all cards excluding murder circumstances; dealt out)
+  Turn (one player; changes after player action) -> Action
+  Die (1-6; can be rolled)
+  Square (location on board) -> Board
+  Suggestion (action; consists: room player is in, weapon, character)
+  Refutation (one card from other players' hands iif matches suggestion)
+  Accusation (three items: room, weapon, character; win/lose)
+
+Operations
+  Game starts (generate envelope; deal cards; place players at starting squares; determine who goes first)
+  Generate envelope (cards blindly selected at random)
+  Shuffle (stack of cards)
+  Deal
+  Move (number rolled by dice; player character)
+  Enter room (player character)
+  Make a suggestion (Suggestion concept)
+  Forcefully moved (player character that was suggested)
+  Refute (Refutation concept)
+  Accuse (Accusation concept)
+  Win
+  Player is excluded
