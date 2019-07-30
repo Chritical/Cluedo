@@ -1,0 +1,77 @@
+class Game{
+	1--* Item holds;
+	1 distributesItems --* Player takes;
+	1--1 Envelope Generates;
+	1--1 Turn Starts;
+	1 ChecksWin--* Player hasWinChecked;
+	1--1 GameOver calls;
+}
+
+class Board{
+	1--* Room;
+    1--* Character;
+    1--* OtherLocations;
+  String displayBoard(){};
+
+}
+class Player{
+	1--* Item holds;
+	Character character;
+	int rollsDice(){}
+	Item[3] suggest(Room r, Weapon w, Character c){}
+	1--* Character forForceMove;
+	void forceMove(Character c){}
+	Boolean makeRefutation(Item){}
+	1--1 Envelope knows;
+  Boolean makeAccusation(Room r, Weapon w, Character c){};
+	int moveCharacter(int x, int y){};      
+	
+}
+
+class Envelope{
+Room room;
+Weapon weapon;
+Character character;
+}
+
+class Item{
+}
+
+class Turn{
+	Player currentPlayer;
+	1 holdsOrder--* Player givenOrder;
+	1 holdsLost --* Player checksLost;
+	1 tellsStart--1 Player startsTurn;
+	1--1 Board retrievesUpdated;
+	boolean removeFromOrder(){}
+
+}
+
+class OtherLocations{
+  double x;
+  double y;
+}
+
+class GameOver{
+}
+
+
+
+class Room{
+double x;
+	double y;
+  isA Item;
+	1--* Character inside;
+}
+
+class Weapon{
+  isA Item;
+}
+
+
+class Character{
+  isA Item;
+double x;
+	double y;
+	int move(int x, int y){}
+}//$?[End_of_model]$?
