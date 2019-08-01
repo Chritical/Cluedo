@@ -4,6 +4,7 @@ public class Game {
 
     private boolean isOver = true;
     private Board board = new Board();
+    private Player currentPlayer;
     private List<Room> rooms = new ArrayList<>();
     private List<Token> tokens = new ArrayList<>();
     private List<Weapon> weapons = new ArrayList<>();
@@ -21,6 +22,10 @@ public class Game {
         initialisePlayers();
         dealItemsToPlayers();
 //        board.reset();
+    }
+
+    private void run() {
+
     }
 
     /**
@@ -56,7 +61,7 @@ public class Game {
      * Intialise the players of the game.
      *
      * Asks the user to input the number of players, then randomly assigns each
-     * player a character token.
+     * player a character token. It sets the current player.
      */
     public void initialisePlayers() {
         players.clear();
@@ -65,6 +70,7 @@ public class Game {
         for (int i = 0; i < numPlayers; i++) {
             players.add(new Player(tokens.get(i)));
         }
+        currentPlayer = players.get(0);
     }
 
     /**
