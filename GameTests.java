@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,36 +17,36 @@ public class GameTests {
         System.setIn(new ByteArrayInputStream(numPlayers.getBytes()));
     }
 
-//    @Test
-//    private void testContainsAllItems() {
-//
-//        Game game = new Game();
-//        HashSet<Item> items = game.getItems();
-//
-//        assertTrue(items.contains(new Token("Miss Scarlett")));
-//        assertTrue(items.contains(new Token("Colonel Mustard")));
-//        assertTrue(items.contains(new Token("Mrs. White")));
-//        assertTrue(items.contains(new Token("Mr. Green")));
-//        assertTrue(items.contains(new Token("Mrs. Peacock")));
-//        assertTrue(items.contains(new Token("Professor Plum")));
-//
-//        assertTrue(items.contains(new Weapon("Candlestick")));
-//        assertTrue(items.contains(new Weapon("Dagger")));
-//        assertTrue(items.contains(new Weapon("Lead Pipe")));
-//        assertTrue(items.contains(new Weapon("Revolver")));
-//        assertTrue(items.contains(new Weapon("Rope")));
-//        assertTrue(items.contains(new Weapon("Spanner")));
-//
-//        assertTrue(items.contains(new Room("Ball Room")));
-//        assertTrue(items.contains(new Room("Conservatory")));
-//        assertTrue(items.contains(new Room("Billiard Room")));
-//        assertTrue(items.contains(new Room("Library")));
-//        assertTrue(items.contains(new Room("Study")));
-//        assertTrue(items.contains(new Room("Hall")));
-//        assertTrue(items.contains(new Room("Lounge")));
-//        assertTrue(items.contains(new Room("Dining Room")));
-//        assertTrue(items.contains(new Room("Kitchen")));
-//    }
+    @Test
+    void testContainsAllItems() {
+
+        Game game = new Game();
+        List<Item> items = game.getItems();
+
+        assertTrue(items.contains(new Token("Miss Scarlett")));
+        assertTrue(items.contains(new Token("Colonel Mustard")));
+        assertTrue(items.contains(new Token("Mrs. White")));
+        assertTrue(items.contains(new Token("Mr. Green")));
+        assertTrue(items.contains(new Token("Mrs. Peacock")));
+        assertTrue(items.contains(new Token("Professor Plum")));
+
+        assertTrue(items.contains(new Weapon("Candlestick")));
+        assertTrue(items.contains(new Weapon("Dagger")));
+        assertTrue(items.contains(new Weapon("Lead Pipe")));
+        assertTrue(items.contains(new Weapon("Revolver")));
+        assertTrue(items.contains(new Weapon("Rope")));
+        assertTrue(items.contains(new Weapon("Spanner")));
+
+        assertTrue(items.contains(new Room("Ball Room")));
+        assertTrue(items.contains(new Room("Conservatory")));
+        assertTrue(items.contains(new Room("Billiard Room")));
+        assertTrue(items.contains(new Room("Library")));
+        assertTrue(items.contains(new Room("Study")));
+        assertTrue(items.contains(new Room("Hall")));
+        assertTrue(items.contains(new Room("Lounge")));
+        assertTrue(items.contains(new Room("Dining Room")));
+        assertTrue(items.contains(new Room("Kitchen")));
+    }
 
     @Test
     void testValidAskNumPlayers() {
@@ -81,6 +83,7 @@ public class GameTests {
 
         assertEquals(0, game.getPlayers().size());
 
+        game.generateItems();
         game.initialisePlayers();
 
         assertEquals(5, game.getPlayers().size());
