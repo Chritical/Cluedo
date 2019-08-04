@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,11 +1,13 @@
-package GamePackage;
-
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Board {
     private Room[][] roomLocation= new Room[24][25];
     private Token[][] tokenLocation = new Token[25][25];
+
+    public boolean isInRoom(Player player) {
+        return false;
+    }
 
     public Board(){
         ArrayList<Room> rooms = new ArrayList<Room>();
@@ -94,25 +96,36 @@ public class Board {
         }
         else if(t.getName().equals("Professor Plum")){
             tokenLocation[23][19] = t;
+            t.setPoint(23, 19);
         }
         else if(t.getName().equals("Miss Scarlet")){
             tokenLocation[7][24] = t;
+            t.setPoint(7, 24);
         }
         else if(t.getName().equals("Mrs. White")){
             tokenLocation[9][0] = t;
+            t.setPoint(9, 0);
         }
         else if(t.getName().equals("Mrs. Peacock")){
             tokenLocation[23][6] = t;
+            t.setPoint(23, 6);
         }
         else if(t.getName().equals("Colonel Mustard")){
             tokenLocation[0][17] = t;
+            t.setPoint(0, 17);
         }
         else if(t.getName().equals("Mr. Green")){
             tokenLocation[14][0] = t;
+            t.setPoint(14, 0);
         }
         else{
             assert false;
         }
+    }
+
+    public void move(Point from,Point to){
+        tokenLocation[to.x][to.y] = tokenLocation[from.x][from.y];
+        tokenLocation[from.x][from.y] = null;
     }
 
     public String toString(){
@@ -183,7 +196,15 @@ public class Board {
             }
 
 
+            boardBuilder.append("  ");
+            for (int i = 0; i < 24; i++) {
+                boardBuilder.append(" ");
+                boardBuilder.append((char) ('a' + i));
+            }
+            boardBuilder.append("\n");
+
             for (int y = 0; y<25;y++){
+                boardBuilder.append((char) ('A' + y) + " ");
                 for(int x=0; x<24; x++){
                     assert(board[x][y] != 0);
                     boardBuilder.append('|');
@@ -201,11 +222,6 @@ public class Board {
 
         public void print(){
             System.out.println(toString());
-        }
-
-        public void move(Point from,Point to){
-            tokenLocation[to.x][to.y] = tokenLocation[from.x][from.y];
-            tokenLocation[from.x][from.y] = null;
         }
     }
 
