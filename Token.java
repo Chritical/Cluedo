@@ -1,3 +1,5 @@
+package GamePackage;
+
 import java.util.Objects;
 
 public class Token implements Item {
