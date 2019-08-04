@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTests {
 
-    void setNumPlayers(int numPlayers) {
+    private void setNumPlayers(int numPlayers) {
         System.setIn(new ByteArrayInputStream(Integer.toString(numPlayers).getBytes()));
     }
 
-    void setNumPlayers(String numPlayers) {
+    private void setNumPlayers(String numPlayers) {
         System.setIn(new ByteArrayInputStream(numPlayers.getBytes()));
     }
 
@@ -98,39 +98,40 @@ public class GameTests {
         setNumPlayers(2);
         game.initialisePlayers();
         game.dealItemsToPlayers();
-        assertEquals(11, game.getPlayers().get(0).getItems().size());
-        assertEquals(10, game.getPlayers().get(1).getItems().size());
+        assertEquals(9, game.getPlayers().get(0).getItems().size());
+        assertEquals(9, game.getPlayers().get(1).getItems().size());
 
         setNumPlayers(3);
         game.initialisePlayers();
         game.dealItemsToPlayers();
         for (Player p : game.getPlayers()) {
-            assertEquals(7, p.getItems().size());
+            assertEquals(6, p.getItems().size());
         }
 
         setNumPlayers(4);
         game.initialisePlayers();
         game.dealItemsToPlayers();
-        assertEquals(6, game.getPlayers().get(0).getItems().size());
-        for (int i = 1; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             assertEquals(5, game.getPlayers().get(i).getItems().size());
+        }
+        for (int i = 2; i < 4; i++) {
+            assertEquals(4, game.getPlayers().get(i).getItems().size());
         }
 
         setNumPlayers(5);
         game.initialisePlayers();
         game.dealItemsToPlayers();
-        assertEquals(5, game.getPlayers().get(0).getItems().size());
-        for (int i = 1; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             assertEquals(4, game.getPlayers().get(i).getItems().size());
+        }
+        for (int i = 3; i < 5; i++) {
+            assertEquals(3, game.getPlayers().get(i).getItems().size());
         }
 
         setNumPlayers(6);
         game.initialisePlayers();
         game.dealItemsToPlayers();
-        for (int i = 0; i < 3; i++) {
-            assertEquals(4, game.getPlayers().get(i).getItems().size());
-        }
-        for (int i = 3; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             assertEquals(3, game.getPlayers().get(i).getItems().size());
         }
     }
