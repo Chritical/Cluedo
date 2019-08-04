@@ -1,5 +1,3 @@
-package GamePackage;
-
 import java.util.Objects;
 
 public class Room implements Item {
@@ -25,5 +23,12 @@ public class Room implements Item {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

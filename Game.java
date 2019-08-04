@@ -1,33 +1,230 @@
-package GamePackage;
-
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
+/**
+ * The game of Cluedo.
+ *
+ * Cleudo is a murder mystery game in which the <code>Player</code>s must move
+ * around the board, making suggestions in order to determine the murder
+ * circumstances. Each player controls a character <code>Token</code> and holds
+ * a set of cards. Each card represents an <code>Item</code> in the game. An
+ * <code>Item</code> can be a <code>Room</code>, <code>Token</code>, or a
+ * <code>Weapon</code>.
+ *
+ * On a player's turn they roll two six-sided dice to determine the number of
+ * squares they can move. Once their <code>Token</code> is in a room, they can
+ * make a suggestion. A suggestion consists of three <code>Item</code>s, one of
+ * each type. Every other player then reveals a card (refutation) only to the
+ * current player. The card must be one of the <code>Item</code>s that the
+ * current player suggested. If another player doesn't hold an
+ * <code>Item</code> that was suggested, they don't show any cards.
+ *
+ * At the end of any player's turn, they can make an accusation. An accusation
+ * is similar to a suggestion in that they choose one of each
+ * <code>Item</code>. The <code>Item</code>s are then compared to the murder
+ * circumstances randomly chosen at the beginning of the game. If the player
+ * chose all three correctly, they win. Otherwise, they lose and are out of the
+ * game, but they can still make refutations.
+ *
+ * The game is over when one player guesses correctly, or everyone guesses
+ * incorrectly.
+ */
 public class Game {
 
     private boolean isOver = true;
     private Board board = new Board();
-    private Player currentPlayer;
+    private int currentPlayer;
+    private List<Integer> lostPlayers = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
     private List<Token> tokens = new ArrayList<>();
     private List<Weapon> weapons = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
+    private Envelope murderCircumstances;
 
     public Game() {
         generateItems();
+        run();
+    }
+
+    public static boolean askYesNo() {
+        Scanner input = new Scanner(System.in);
+        String response = input.next();
+        input.reset();
+        return response.equals("y");
     }
 
     /**
      * Starts the game.
      */
     private void startGame() {
+
+        isOver = false;
         printWelcomeMessage();
         initialisePlayers();
+        murderCircumstances = generateEnvelope();
+        System.out.println(murderCircumstances.toString());
         dealItemsToPlayers();
-//        board.reset();
+
+
+        //        board.reset();
     }
 
     private void run() {
+        while (true) {
+            if (isOver) {
+                System.out.print("Start new game? (y/n): ");
 
+                if (askYesNo()) {
+                    startGame();
+                } else {
+                    System.exit(0);
+                }
+            } else {
+                turn();
+            }
+        }
+    }
+
+    private void turn() {
+
+        if (lostPlayers.contains(currentPlayer)) {
+            nextPlayer();
+            return;
+        }
+
+        board.print();
+
+        Player workingPlayer = players.get(currentPlayer);
+
+        printPlayerTurn();
+        workingPlayer.printItems();
+        int roll = generateDiceRoll(2);
+        printRoll(roll);
+        handlePlayerMove(roll);
+
+        if (board.isInRoom(workingPlayer) && workingPlayer.isMakingSuggestion()) {
+            playerRefutations(workingPlayer.makeSuggestion());
+        }
+
+        handlePlayerAccusation();
+        nextPlayer();
+    }
+
+    private void printPlayerTurn() {
+        System.out.println("It's " +
+                players.get(currentPlayer).getToken().getName() +
+                "'s turn.");
+    }
+
+    private void playerRefutations(Envelope suggestion) {
+
+        for (int player = 0; player < players.size(); player++) {
+
+            if (currentPlayer == player) continue;
+            players.get(player).makeRefutation(suggestion);
+        }
+
+    }
+
+    private void handlePlayerAccusation() {
+
+        Player workingPlayer = players.get(currentPlayer);
+
+        if (workingPlayer.isMakingAccusation()) {
+            Envelope accusation;
+            while (true) {
+                accusation = workingPlayer.makeAccusation();
+
+                if (getItems().contains(accusation.getRoom())
+                        && getItems().contains(accusation.getToken())
+                        && getItems().contains(accusation.getWeapon())) {
+                    break;
+                }
+
+                if (!getItems().contains(accusation.getRoom()))
+                    System.out.println("Invalid room!");
+                else if (!getItems().contains(accusation.getToken()))
+                    System.out.println("Invalid character!");
+                else if (!getItems().contains(accusation.getWeapon()))
+                    System.out.println("Invalid weapon!");
+            }
+
+            System.out.println(murderCircumstances.toString());
+
+            if (murderCircumstances.equals(accusation)) {
+                isOver = true;
+                printGameOver();
+            } else {
+                lostPlayers.add(currentPlayer);
+                printPlayerLost();
+            }
+        }
+    }
+
+    private void printGameOver() {
+        System.out.println("Congratulations!\n" +
+                players.get(currentPlayer).getToken().getName()
+                + " has won the game!\n");
+    }
+
+    private void printPlayerLost() {
+        System.out.println("Incorrect! You have lost.");
+    }
+
+    private void nextPlayer() {
+        currentPlayer++;
+        if (currentPlayer >= players.size()) currentPlayer = 0;
+    }
+
+    private int generateDiceRoll(int numDice) {
+        Random random = new Random();
+        int total = numDice; // to account for r.nextInt() having range [0,5]
+        for (int i = 0; i < numDice; i++) total += random.nextInt(6);
+        return total;
+    }
+
+    private void printRoll(int roll) {
+        System.out.println("You rolled: " + roll);
+    }
+
+    private void handlePlayerMove(int roll) {
+
+        Scanner input = new Scanner(System.in);
+        Point newPos;
+        String regex = "[A-Y][a-x]";
+        Player workingPlayer = players.get(currentPlayer);
+
+        while (true) {
+
+            printAskMove();
+
+            String m = input.next();
+
+            if (m.matches(regex)) {
+                newPos = toPoint(m);
+
+                if (workingPlayer.isValidMove(newPos, roll, board)) {
+                    break;
+                } else {
+                    System.out.println("Invalid move.");
+                }
+            } else {
+                System.out.println("Invalid move.");
+            }
+        }
+
+        workingPlayer.move(newPos, board);
+        input.reset();
+    }
+
+    private Point toPoint(String pos) {
+        char[] coords = pos.toCharArray();
+        return new Point(coords[0] - 'A', coords[1] - 'A');
+    }
+
+    private void printAskMove() {
+        System.out.print("Enter a move: ");
     }
 
     /**
@@ -50,8 +247,12 @@ public class Game {
         List<Item> items = getItems();
         Collections.shuffle(items);
 
-        for (int i = 0; i < items.size(); i++) {
-            players.get(i % players.size()).addItem(items.get(i));
+        int player = 0;
+
+        for (int item = 0; item < items.size(); item++) {
+            if (!murderCircumstances.contains(items.get(item))) {
+                players.get(player++ % players.size()).addItem(items.get(item));
+            }
         }
     }
 
@@ -71,8 +272,9 @@ public class Game {
         int numPlayers = askNumPlayers();
         for (int i = 0; i < numPlayers; i++) {
             players.add(new Player(tokens.get(i)));
+            board.addToken(tokens.get(i));
         }
-        currentPlayer = players.get(0);
+        currentPlayer = 0;
     }
 
     /**
@@ -82,37 +284,28 @@ public class Game {
      */
     public int askNumPlayers() {
         Scanner input = new Scanner(System.in);
-        int numPlayers = 0;
+        String regex = "[2-6]";
+        String numPlayers;
 
-        do {
+        while (true) {
             printAskPlayerCount();
-            try {
-                numPlayers = input.nextInt();
-            } catch (InputMismatchException e) {
+            numPlayers = input.nextLine();
+            if (numPlayers.matches(regex)) {
+                break;
+            } else {
                 System.out.println("Invalid input.");
-                input.nextLine(); // clear scanner buffer
             }
-        } while (!isValidNumPlayers(numPlayers));
+        }
 
-        input.close();
-        return numPlayers;
-    }
-
-    /**
-     * Check to see if the number of players is valid.
-     *
-     * @param numPlayers Number of players.
-     * @return Is valid number of players.
-     */
-    private boolean isValidNumPlayers(int numPlayers) {
-        return 2 <= numPlayers && numPlayers <= 6;
+        input.reset();
+        return Integer.parseInt(numPlayers);
     }
 
     /**
      * Prints a welcome message at the start of the game.
      */
     private void printWelcomeMessage() {
-        System.out.println("Welcome to Cluedo!\n\n");
+        System.out.println("Welcome to Cluedo!\n");
     }
 
     /**
