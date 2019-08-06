@@ -1,3 +1,5 @@
+package GamePackage;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -5,10 +7,27 @@ public class Board {
     private Room[][] roomLocation= new Room[24][25];
     private Token[][] tokenLocation = new Token[25][25];
 
-    public boolean isInRoom(Player player) {
-        return false;
+    /**
+     * checks if a point on the board is in the same location as the given room
+     * @param p
+     * @param room
+     * @return
+     */
+    public boolean isInRoom(Point p, Room room) {
+        if(room == null){
+            return false;
+        }
+        if(roomLocation[p.x][p.y] == null){
+            return false;
+        }
+        return roomLocation[p.x][p.y].equals(room);
+
     }
 
+    /**
+     * Creates the Cluedo Board that initially stores all room locations
+     * and restricted squares.
+     */
     public Board(){
         ArrayList<Room> rooms = new ArrayList<Room>();
         //makes rooms
@@ -73,7 +92,7 @@ public class Board {
         makeRoom(15, 16, 24,25,rooms.get(9));
     }
 
-    public void makeRoom(int xStart, int xEnd, int yStart, int yEnd, Room room){
+    private void makeRoom(int xStart, int xEnd, int yStart, int yEnd, Room room){
         for(int i = xStart; i!=xEnd;i++){
             for(int j = yStart; j!=yEnd; j++){
                 roomLocation[i][j] = room;
@@ -90,6 +109,11 @@ public class Board {
         return tokenLocation[p.x][p.y];
     }
 
+    /**
+     * adds a token to it's starting location on the board and
+     * adds the location on the board to the token
+     * @param t
+     */
     public void addToken(Token t){
         if(t.getName() == null){
             return;
@@ -98,7 +122,7 @@ public class Board {
             tokenLocation[23][19] = t;
             t.setPoint(23, 19);
         }
-        else if(t.getName().equals("Miss Scarlet")){
+        else if(t.getName().equals("Miss Scarlett")){
             tokenLocation[7][24] = t;
             t.setPoint(7, 24);
         }
@@ -123,11 +147,23 @@ public class Board {
         }
     }
 
+    /**
+     * Moves the token at the from location to the to location and sets
+     * the from location to null
+     * Also updates the location in the token moved
+     */
     public void move(Point from,Point to){
         tokenLocation[to.x][to.y] = tokenLocation[from.x][from.y];
         tokenLocation[from.x][from.y] = null;
+        if(tokenLocation[to.x][to.y]!=null){
+                tokenLocation[to.x][to.y].setPoint(to.x, to.y);
+    }
     }
 
+    /**
+     * makes a visual representation of the board using ascii characters
+     *
+     */
     public String toString(){
         char[][] board = new char[24][25];
         StringBuilder boardBuilder = new StringBuilder();
@@ -172,22 +208,22 @@ public class Board {
                 if(t== null){
                 }
                 else if(t.getName().equals("Professor Plum")){
-                    board[x][y] = 'P';
+                    board[x][y] = 'p';
                 }
-                else if(t.getName().equals("Miss Scarlet")){
-                    board[x][y] = 'S';
+                else if(t.getName().equals("Miss Scarlett")){
+                    board[x][y] = 's';
                 }
                 else if(t.getName().equals("Mrs. White")){
-                    board[x][y] = 'W';
+                    board[x][y] = 'w';
                 }
                 else if(t.getName().equals("Mrs. Peacock")){
-                    board[x][y] = 'E';
+                    board[x][y] = 'e';
                 }
                 else if(t.getName().equals("Colonel Mustard")){
-                    board[x][y] = 'M';
+                    board[x][y] = 'm';
                 }
                 else if(t.getName().equals("Mr. Green")){
-                    board[x][y] = 'G';
+                    board[x][y] = 'g';
                 }
 
 
@@ -212,15 +248,22 @@ public class Board {
 
                 }
                 boardBuilder.append('|');
-                if(y!=24){
-                    boardBuilder.append('\n');
-                }
+                boardBuilder.append('\n');
+
             }
-            return boardBuilder.toString();
+            return boardBuilder.toString() + "\n"+
+                    "K = Kitchen, B = Ball Room, C = Conservatory,\n"+
+                    "L = Library, S = Study, H = Hall, l = Lounge, \n"+
+                    "D = Dining Room, X = Restricted, s = Scarlett, \n"+
+                    "e = Peacock, m = Mustard, g = Green, p = Plum, \n"+
+                    "w = White";
 
         }
 
-        public void print(){
+    /**
+     * prints a visual representation of the board using ascii characters
+     */
+    public void print(){
             System.out.println(toString());
         }
     }

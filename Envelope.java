@@ -1,3 +1,5 @@
+package GamePackage;
+
 import java.util.Objects;
 
 
@@ -28,6 +30,11 @@ public class Envelope {
         this.weapon = weapon;
     }
 
+    /**
+     * checks whether the envelope contains the given item
+     * @param item
+     * @return
+     */
     public boolean contains(Item item) {
         return room.equals(item) || token.equals(item) || weapon.equals(item);
     }
