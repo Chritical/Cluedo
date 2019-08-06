@@ -1,3 +1,8 @@
+package GamePackage;
+import GamePackage.Board;
+import GamePackage.Room;
+import GamePackage.Token;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -42,11 +47,27 @@ public class Game {
     private List<Player> players = new ArrayList<>();
     private Envelope murderCircumstances;
 
+    /**
+     * a constructor for testing, that makes some elements of the game class
+     * that do not require user input
+     * @param test
+     */
+    public Game(String test){
+        generateItems();
+    }
+
+    /**
+     * creates a game object by storing all game items and running the game
+     */
     public Game() {
         generateItems();
         run();
     }
 
+    /**
+     * Asks the user if they want to run the game
+     * @return
+     */
     public static boolean askYesNo() {
         Scanner input = new Scanner(System.in);
         String response = input.next();
@@ -63,12 +84,12 @@ public class Game {
         printWelcomeMessage();
         initialisePlayers();
         murderCircumstances = generateEnvelope();
-        System.out.println(murderCircumstances.toString());
         dealItemsToPlayers();
 
 
-        //        board.reset();
+
     }
+
 
     private void run() {
         while (true) {
@@ -103,8 +124,8 @@ public class Game {
         printRoll(roll);
         handlePlayerMove(roll);
 
-        if (board.isInRoom(workingPlayer) && workingPlayer.isMakingSuggestion()) {
-            playerRefutations(workingPlayer.makeSuggestion());
+        if (workingPlayer.isMakingSuggestion()) {
+            playerRefutations(workingPlayer.makeSuggestion(board, this));
         }
 
         handlePlayerAccusation();
@@ -192,7 +213,7 @@ public class Game {
 
         Scanner input = new Scanner(System.in);
         Point newPos;
-        String regex = "[A-Y][a-x]";
+        String regex = "[a-x][A-Y]";
         Player workingPlayer = players.get(currentPlayer);
 
         while (true) {
@@ -220,11 +241,13 @@ public class Game {
 
     private Point toPoint(String pos) {
         char[] coords = pos.toCharArray();
-        return new Point(coords[0] - 'A', coords[1] - 'A');
+        Point point = new Point(coords[0] - 'a', coords[1] - 'A');
+        return point;
+
     }
 
     private void printAskMove() {
-        System.out.print("Enter a move: ");
+        System.out.print("Enter a move, e.g. bC: ");
     }
 
     /**
@@ -284,7 +307,7 @@ public class Game {
      */
     public int askNumPlayers() {
         Scanner input = new Scanner(System.in);
-        String regex = "[2-6]";
+        String regex = "[3-6]";
         String numPlayers;
 
         while (true) {
@@ -312,7 +335,7 @@ public class Game {
      * Prints a query asking the user how many players are playing.
      */
     private void printAskPlayerCount() {
-        System.out.print("How many players are playing? (2 to 6): ");
+        System.out.print("How many players are playing? (3 to 6): ");
     }
 
     /**

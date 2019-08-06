@@ -1,3 +1,5 @@
+package GamePackage;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -18,6 +20,11 @@ public class Token implements Item {
         return point;
     }
 
+    /**
+     * sets the location of this token on the board
+     * @param x
+     * @param y
+     */
     public void setPoint(int x, int y) {
         point = new Point(x, y);
     }
